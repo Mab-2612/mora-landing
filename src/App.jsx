@@ -4,14 +4,26 @@ import {
   Calendar, Users, Flame, BarChart3, Bell, 
   CheckCircle, ArrowRight, Menu, X, Moon, Sun, 
   Mail, Shield, Layout, BrainCircuit, Music, 
-  PenTool, Layers, ChevronRight
+  PenTool, Layers, ChevronRight, Twitter, Instagram, Linkedin, Github 
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './App.css';
+import { supabase } from './supabase';
 import logoSrc from './assets/logo.png'
 
-// --- PHONE SCREEN COMPONENTS (6 SCREENS) --- //
+// --- ASSETS ---
+// FOR LOCAL USE: Uncomment the line below and place your 'logo.png' in 'src/assets/'
+// import logoSrc from './assets/logo.png';
 
+// FOR PREVIEW ONLY: Using a placeholder so the app compiles without the file present
+// const logoSrc = "../assets/logo.png"; 
+
+// --- CUSTOM ICONS ---
+const Tiktok = ({ size = 24 }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" /></svg>
+);
+
+// --- PHONE SCREEN COMPONENTS (6 SCREENS) --- //
 const TimerScreen = () => (
   <div className="screen-content timer-mode">
     <div className="status-pill">Focus Round 1/4</div>
@@ -129,10 +141,14 @@ function App() {
   const [theme, setTheme] = useState('dark');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeScreen, setActiveScreen] = useState(0);
+  
+  // --- FORM STATES ---
   const [email, setEmail] = useState('');
-  const [formStatus, setFormStatus] = useState('idle');
+  const [formStatus, setFormStatus] = useState('idle'); 
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterStatus, setNewsletterStatus] = useState('idle');
 
-  // Defined Explicitly
+  // Explicitly defined screens array
   const screens = [
     <TimerScreen />, 
     <TaskScreen />, 
@@ -142,7 +158,7 @@ function App() {
     <NotificationScreen />
   ];
 
-  // Auto-rotate screens
+  // Auto-rotate screens loop
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveScreen((prev) => (prev + 1) % screens.length);
@@ -162,22 +178,92 @@ function App() {
     document.documentElement.setAttribute('data-theme', systemPref);
   }, []);
 
-  const handleWaitlist = (e) => {
-    e.preventDefault();
-    if(!email) return;
-    setFormStatus('loading');
-    setTimeout(() => {
-      setFormStatus('success');
-      setEmail('');
-      setTimeout(() => setFormStatus('idle'), 3000);
-    }, 1500);
+  const isValidEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
+
+
+  // --- SUPABASE SUBMISSION LOGIC ---
+  const submitEmail = async (emailAddress, source, setStatusFn, setInputFn, showToast) => {
+    if (!emailAddress || !emailAddress.includes('@')) {
+    showToast("Please enter a valid email.", "error");
+    return;
+    }
+
+    setStatusFn("loading");
+
+    try {
+    const { error } = await supabase
+    .from("waitlist")
+    .insert([{
+    email: emailAddress,
+    source: source,
+    created_at: new Date().toISOString() // ensure created_at is not null
+    }]);
+
+  
+    if (error) {
+      // Duplicate email
+      if (error.code === "23505") {
+        showToast("You're already on the list! 🚀", "success");
+        setStatusFn("success");
+      } else {
+        throw error;
+      }
+    } else {
+      showToast("You’ve been added to the waitlist! ✅", "success");
+      setStatusFn("success");
+      setInputFn("");
+    }
+
+    if (error?.code === '23505' || error?.status === 409) {
+      showToast("You're already on the waitlist! 🚀", "success");
+      setStatusFn('success');
+      setInputFn('');
+    }
+  
+
+    } catch (err) {
+    console.error("Supabase Error:", err);
+    showToast("Oops! Something went wrong. Try again.", "error");
+    setStatusFn("error");
+    setTimeout(() => setStatusFn("idle"), 3000);
+    }
+
+    setTimeout(() => {
+      setStatusFn('idle'); // back to normal button
+    }, 2000);
+  };
+
+    // Example of a simple toast function
+    // const showToast = (message, type = "info") => {
+    // const toast = document.createElement("div");
+    // toast.className = `toast ${type}`;
+    // toast.textContent = message;
+    // document.body.appendChild(toast);
+    // setTimeout(() => {
+    // toast.classList.add("fade-out");
+    // toast.addEventListener("transitionend", () => toast.remove());
+    // }, 3000);
+    // };
+
+    const showToast = (message, type = "info") => {
+      const toast = document.createElement("div");
+      toast.className = `toast ${type}`;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => {
+        toast.classList.add("fade-out");
+        toast.addEventListener("transitionend", () => toast.remove());
+      }, 3000);
+    };
 
   return (
     <div className="app">
       <div className="glow-bg top-left"></div>
       <div className="glow-bg bottom-right"></div>
 
+      {/* --- MENU OVERLAY (TAP TO CLOSE) --- */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div 
@@ -192,21 +278,30 @@ function App() {
 
       {/* --- NAVBAR --- */}
       <nav className="navbar">
+        {/* 1. Logo Only (No Text) */}
         <div className="brand">
           <img src={logoSrc} alt="Mora Logo" className="logo-img" />
         </div>
+
+        {/* 2. Navigation Links (Hidden on Mobile) */}
         <div className={`nav-links ${isMenuOpen ? 'open' : ''}`}>
           <a href="#features" onClick={() => setIsMenuOpen(false)}>Features</a>
           <a href="#vision" onClick={() => setIsMenuOpen(false)}>Vision</a>
           <a href="#roadmap" onClick={() => setIsMenuOpen(false)}>Roadmap</a>
+          {/* Theme Toggle Removed from here for Mobile consistency */}
           <a href="#waitlist" className="nav-cta" onClick={() => setIsMenuOpen(false)}>Join Waitlist</a>
         </div>
-        <button className="theme-toggle" onClick={toggleTheme}>
-          {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-        </button>
-        <button className="menu-btn" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-          {isMenuOpen ? <X /> : <Menu />}
-        </button>
+
+        {/* 3. Right Side Actions (Always Visible) */}
+        <div className="nav-actions">
+          <button className="theme-toggle" onClick={toggleTheme}>
+            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+          </button>
+
+          <button className="menu-btn" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            {isMenuOpen ? <X /> : <Menu />}
+          </button>
+        </div>
       </nav>
 
       {/* --- HERO --- */}
@@ -218,15 +313,65 @@ function App() {
             <p className="hero-sub">
               Mora isn't just a timer. It's an intelligent workspace that combines AI scheduling, urgent task management, and stress relief into one seamless iOS and Android experience.
             </p>
-            <form className="waitlist-form" onSubmit={handleWaitlist} id="waitlist">
+            
+            {/* HERO WAITLIST FORM */}
+            <form 
+              className="waitlist-form" 
+              id="waitlist" 
+              onSubmit={(e) => {
+                e.preventDefault();
+
+                if (!isValidEmail(newsletterEmail)) {
+                  showToast("Please enter a valid email ✨", "error");
+                  return;
+                }
+
+                submitEmail(
+                  newsletterEmail,
+                  "newsletter",
+                  setNewsletterStatus,
+                  setNewsletterEmail,
+                  showToast
+                );
+              }}
+            >
               <div className="input-group">
                 <Mail className="input-icon" size={20} />
-                <input type="email" placeholder="name@email.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+                <input type="email" placeholder="name@email.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
               </div>
-              <button className="btn-submit" disabled={formStatus === 'loading'}>
-                {formStatus === 'success' ? <CheckCircle size={20}/> : <span>Join <ArrowRight size={18}/></span>}
+              <button
+                className="join-btn"
+                disabled={formStatus === 'loading'}
+              >
+                <span className="btn-content">
+                  {formStatus === "loading"
+                    ? "Joining..."
+                    : formStatus === "success"
+                    ? "Joined!"
+                    : "Join"}
+
+                  {/* Arrow only shows when idle */}
+                  {formStatus === "idle" && (
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      className="btn-arrow"
+                    >
+                      <path
+                        d="M5 12h14m0 0l-6-6m6 6l-6 6"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  )}
+                </span>
               </button>
             </form>
+            
             <div className="users-preview">
               <div className="avatars"><div className="avatar">A</div><div className="avatar">B</div><div className="avatar">C</div></div>
               <p>Join 2,000+ others waiting</p>
@@ -234,13 +379,14 @@ function App() {
           </motion.div>
         </div>
 
-        {/* --- PHONE MOCKUP --- */}
+        {/* --- PHONE MOCKUP CAROUSEL --- */}
         <div className="hero-phone-wrapper">
           <div className="phone-mockup">
             <div className="notch"></div>
             <div className="side-btn volume-up"></div>
             <div className="side-btn volume-down"></div>
             <div className="side-btn power"></div>
+            
             <div className="screen-container">
               <AnimatePresence mode='wait'>
                 <motion.div
@@ -255,15 +401,14 @@ function App() {
                 </motion.div>
               </AnimatePresence>
               
-              {/* Dynamic Tab Bar Indicator */}
               <div className="tab-bar">
                 <div className={`tab-icon ${[1,3,5].includes(activeScreen) ? 'active' : ''}`}><Calendar size={20}/></div>
-                <div className={`tab-icon ${[0].includes(activeScreen) ? 'active' : ''}`}><Zap size={20}/></div>
-                <div className={`tab-icon ${[2,4].includes(activeScreen) ? 'active' : ''}`}><MessageSquare size={20}/></div>
+                <div className={`tab-icon ${[0,4].includes(activeScreen) ? 'active' : ''}`}><Zap size={20}/></div>
+                <div className={`tab-icon ${[2].includes(activeScreen) ? 'active' : ''}`}><MessageSquare size={20}/></div>
               </div>
             </div>
           </div>
-          {/* Navigation Dots for Carousel */}
+          
           <div className="carousel-dots">
             {screens.map((_, idx) => (
               <div 
@@ -301,7 +446,7 @@ function App() {
         </div>
       </section>
 
-      {/* --- FEATURE DEEP DIVES (Zig-Zag) --- */}
+      {/* --- FEATURE DEEP DIVES --- */}
       <section id="features" className="deep-dive">
         
         {/* 1. Intelligent Scheduling */}
@@ -331,7 +476,7 @@ function App() {
           </div>
         </div>
 
-        {/* 2. Calm Mode (Separate) */}
+        {/* 2. Calm Mode */}
         <div className="feature-row reverse">
           <div className="feature-text">
             <div className="icon-box"><Wind size={24}/></div>
@@ -348,7 +493,7 @@ function App() {
           </div>
         </div>
 
-        {/* 3. Journaling (Separate) */}
+        {/* 3. Journaling */}
         <div className="feature-row">
           <div className="feature-text">
             <div className="icon-box"><PenTool size={24}/></div>
@@ -396,7 +541,7 @@ function App() {
         </div>
       </section>
 
-      {/* --- BENTO GRID (Secondary Features) --- */}
+      {/* --- BENTO GRID --- */}
       <section className="bento-section">
         <div className="section-head">
           <h2>Everything else you need.</h2>
@@ -413,7 +558,6 @@ function App() {
             <h4>2-Way Sync</h4>
             <p>Import Google Calendar meetings and export your "Deep Work" blocks instantly.</p>
           </div>
-          {/* Replaced Focus Buddies with Ambient Sounds */}
           <div className="bento-card">
             <Music size={28} className="b-icon"/>
             <h4>Ambient Soundscapes</h4>
@@ -461,31 +605,124 @@ function App() {
 
       {/* --- FOOTER --- */}
       <footer>
-        <div className="footer-content">
-          <div className="footer-col">
-            <span className="logo">Mora.</span>
-            <p>The operating system for your mind.</p>
+        <div className="footer-top">
+          
+          {/* Brand Column */}
+          <div className="footer-brand-col">
+            <div className="brand">
+              {/* <img src={logoSrc} alt="Mora" className="logo-img" style={{height: '40px'}}/> */}
+              <span style={{fontWeight:800, fontSize:'1.5rem', marginLeft:'10px'}}>Mora.</span>
+            </div>
+            <p className="footer-desc">
+              The operating system built for your mind.
+            </p>
+            <div className="footer-socials">
+              <a href="#" aria-label="Twitter"><Twitter size={20}/></a>
+              <a href="#" aria-label="Instagram"><Instagram size={20}/></a>
+              <a href="#" aria-label="TikTok"><Tiktok size={20}/></a>
+              <a href="#" aria-label="LinkedIn"><Linkedin size={20}/></a>
+              <a href="#" aria-label="GitHub"><Github size={20}/></a>
+            </div>
           </div>
-          <div className="footer-col">
-            <h4>Product</h4>
-            <a href="#">Features</a>
-            <a href="#">Pricing</a>
-            <a href="#">Changelog</a>
+
+          {/* Links Grid */}
+          <div className="footer-links-grid">
+            <div className="f-col">
+              <h4>Product</h4>
+              <a href="#features">Features</a>
+              <a href="#roadmap">Roadmap</a>
+              <a href="#download">Download</a>
+              <a href="#">Changelog</a>
+            </div>
+            <div className="f-col">
+              <h4>Company</h4>
+              <a href="#vision">Vision</a>
+              <a href="#">About</a>
+              <a href="#">Careers</a>
+              <a href="mailto:hello@mora.app">Contact</a>
+            </div>
+            <div className="f-col">
+              <h4>Legal</h4>
+              <a href="#">Privacy Policy</a>
+              <a href="#">Terms of Service</a>
+              <a href="#">Cookie Policy</a>
+            </div>
           </div>
-          <div className="footer-col">
-            <h4>Company</h4>
-            <a href="#">Vision</a>
-            <a href="#">Careers</a>
-            <a href="#">Contact</a>
-          </div>
-          <div className="footer-col">
-            <h4>Legal</h4>
-            <a href="#">Privacy</a>
-            <a href="#">Terms</a>
+
+          {/* Newsletter / Status */}
+          <div className="footer-newsletter-col">
+            <h4>Stay Updated</h4>
+            <p>Get the latest features and productivity tips.</p>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+
+                if (!isValidEmail(heroEmail)) {
+                  showToast("Please enter a valid email ✨", "error");
+                  return;
+                }
+
+                submitEmail(
+                  newsletterEmail,
+                  "newsletter",
+                  setNewsletterStatus,
+                  setNewsletterEmail,
+                  showToast
+                );
+              }}
+              className="newsletter-form"
+            >
+              <input
+                type="email"
+                placeholder="Enter your email"
+                value={newsletterEmail}
+                onChange={(e) => setNewsletterEmail(e.target.value)}
+                required
+                className="newsletter-input"
+              />
+
+              <button
+                className="newsletter-btn"
+                disabled={newsletterStatus === "loading"}
+              >
+                {newsletterStatus === "loading"
+                  ? "Joining…"
+                  : newsletterStatus === "success"
+                  ? "Joined!"
+                  : "Join"}
+
+                {newsletterStatus === "idle" && (
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    className="btn-arrow"
+                  >
+                    <path
+                      d="M5 12h14m0 0l-6-6m6 6l-6 6"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                )}
+              </button>
+            </form>
+            <div className="system-status">
+              <span className="status-dot"></span>
+              <span>All Systems Operational</span>
+            </div>
           </div>
         </div>
+
         <div className="footer-bottom">
-          <p>© 2025 Mora App. All rights reserved.</p>
+          <p>© 2025 Mora App Inc. All rights reserved.</p>
+          <div className="footer-bottom-links">
+            <a href="#">Sitemap</a>
+            <a href="#">Cookies</a>
+          </div>
         </div>
       </footer>
     </div>
