@@ -311,7 +311,7 @@ function App() {
             <div className="badge-pill"><span className="dot"></span> Beta Access Opening Soon</div>
             <h1>Master your <span className="text-gradient">Flow State.</span></h1>
             <p className="hero-sub">
-              Mora isn't just a timer. It's an intelligent workspace that combines AI scheduling, urgent task management, and stress relief into one seamless iOS and Android experience.
+              Mora isn't just a a productivity app. It's an intelligent workspace that combines AI scheduling, urgent task management, and stress relief into one seamless iOS and Android experience.
             </p>
             
             {/* HERO WAITLIST FORM */}
