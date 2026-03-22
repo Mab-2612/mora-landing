@@ -1,29 +1,53 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Smartphone, Zap, Wind, MessageSquare, 
-  Calendar, Users, Flame, BarChart3, Bell, 
-  CheckCircle, ArrowRight, Menu, X, Moon, Sun, 
-  Mail, Shield, Layout, BrainCircuit, Music, 
-  PenTool, Layers, ChevronRight, Twitter, Instagram, Linkedin, Github 
+import {
+  Smartphone, Zap, Wind, MessageSquare,
+  Calendar, Users, Flame, BarChart3, Bell,
+  CheckCircle, Menu, X, Moon, Sun,
+  Shield, Layout, BrainCircuit, Music,
+  PenTool, Layers, Twitter, Instagram, Linkedin, Github, Download
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import playBadge from './assets/google-play-badge.png';
 import './App.css';
-import { supabase } from './supabase';
-import logoSrc from './assets/logo.png'
+import logoSrc from './assets/logo.png';
 
-// --- ASSETS ---
-// FOR LOCAL USE: Uncomment the line below and place your 'logo.png' in 'src/assets/'
-// import logoSrc from './assets/logo.png';
-
-// FOR PREVIEW ONLY: Using a placeholder so the app compiles without the file present
-// const logoSrc = "../assets/logo.png"; 
+// --- APP LINK ---
+const PLAYSTORE_URL = 'https://play.google.com/store/apps/details?id=com.ameen2612.mora.focusflow.app';
 
 // --- CUSTOM ICONS ---
 const Tiktok = ({ size = 24 }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" /></svg>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
+  </svg>
 );
 
-// --- PHONE SCREEN COMPONENTS (6 SCREENS) --- //
+const PlayStoreIcon = ({ size = 22 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 512 512"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+  >
+    <path d="M325.3 234.3 104.7 13.7c-7.4-7.4-19.5-7.4-26.9 0-4.1 4.1-6 9.6-5.6 15L256 256 72.2 483.3c-.4 5.4 1.5 10.9 5.6 15 7.4 7.4 19.5 7.4 26.9 0l220.6-220.6Z" fill="currentColor" opacity="0.22"/>
+    <path d="M402.7 201.4 325.3 234.3 256 256l69.3 21.7 77.4 32.9c18.8 8 37.3-10.4 29.3-29.3l-29.4-69.9c-4.3-10.2-14.2-16.8-25.3-16.8-3 0-6.1.5-9 1.8Z" fill="currentColor"/>
+    <path d="M325.3 277.7 104.7 498.3c-7.4 7.4-19.5 7.4-26.9 0-4.1-4.1-6-9.6-5.6-15L256 256l69.3 21.7Z" fill="currentColor" opacity="0.35"/>
+    <path d="M402.7 201.4 325.3 234.3 256 256 72.2 28.7c-.4-5.4 1.5-10.9 5.6-15 7.4-7.4 19.5-7.4 26.9 0l220.6 220.6 77.4-32.9c2.9-1.3 6-1.8 9-1.8 11.1 0 21 6.6 25.3 16.8l-34.3-14.6Z" fill="currentColor" opacity="0.55"/>
+  </svg>
+);
+
+// --- PHONE SCREEN COMPONENTS --- //
 const TimerScreen = () => (
   <div className="screen-content timer-mode">
     <div className="status-pill">Focus Round 1/4</div>
@@ -47,12 +71,12 @@ const TaskScreen = () => (
       <small>Let's get to work.</small>
     </div>
     <div className="task-list">
-      <div className="task-section-title"><Zap size={12}/> Urgent</div>
+      <div className="task-section-title"><Zap size={12} /> Urgent</div>
       <div className="task-item urgent">
         <div className="check"></div>
         <div className="lines"><span className="line lg"></span><span className="line sm"></span></div>
       </div>
-      <div className="task-section-title"><span style={{color:'#f59e0b'}}>★</span> Important</div>
+      <div className="task-section-title"><span style={{ color: '#f59e0b' }}>★</span> Important</div>
       <div className="task-item">
         <div className="check"></div>
         <div className="lines"><span className="line lg"></span></div>
@@ -85,11 +109,11 @@ const AnalyticsScreen = () => (
       <div className="score-label">Productivity Score</div>
     </div>
     <div className="chart-mock">
-      <div className="bar" style={{height: '40%'}}></div>
-      <div className="bar" style={{height: '70%'}}></div>
-      <div className="bar" style={{height: '50%'}}></div>
-      <div className="bar active" style={{height: '85%'}}></div>
-      <div className="bar" style={{height: '30%'}}></div>
+      <div className="bar" style={{ height: '40%' }}></div>
+      <div className="bar" style={{ height: '70%' }}></div>
+      <div className="bar" style={{ height: '50%' }}></div>
+      <div className="bar active" style={{ height: '85%' }}></div>
+      <div className="bar" style={{ height: '30%' }}></div>
     </div>
     <div className="stat-row-mock">
       <div className="stat-mini"><span>4.5h</span><small>Focus</small></div>
@@ -120,15 +144,15 @@ const NotificationScreen = () => (
     </div>
     <div className="notify-list">
       <div className="notify-item unread">
-        <div className="icon-circle success"><CheckCircle size={14}/></div>
+        <div className="icon-circle success"><CheckCircle size={14} /></div>
         <div className="lines"><span className="line lg"></span><span className="line sm"></span></div>
       </div>
       <div className="notify-item">
-        <div className="icon-circle info"><Bell size={14}/></div>
+        <div className="icon-circle info"><Bell size={14} /></div>
         <div className="lines"><span className="line lg"></span><span className="line sm"></span></div>
       </div>
       <div className="notify-item">
-        <div className="icon-circle error"><Flame size={14}/></div>
+        <div className="icon-circle error"><Flame size={14} /></div>
         <div className="lines"><span className="line lg"></span><span className="line sm"></span></div>
       </div>
     </div>
@@ -136,29 +160,20 @@ const NotificationScreen = () => (
 );
 
 // --- MAIN APP --- //
-
 function App() {
   const [theme, setTheme] = useState('dark');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeScreen, setActiveScreen] = useState(0);
-  
-  // --- FORM STATES ---
-  const [email, setEmail] = useState('');
-  const [formStatus, setFormStatus] = useState('idle'); 
-  const [newsletterEmail, setNewsletterEmail] = useState('');
-  const [newsletterStatus, setNewsletterStatus] = useState('idle');
 
-  // Explicitly defined screens array
   const screens = [
-    <TimerScreen />, 
-    <TaskScreen />, 
-    <ChatScreen />, 
-    <AnalyticsScreen />, 
-    <CalmScreen />, 
+    <TimerScreen />,
+    <TaskScreen />,
+    <ChatScreen />,
+    <AnalyticsScreen />,
+    <CalmScreen />,
     <NotificationScreen />
   ];
 
-  // Auto-rotate screens loop
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveScreen((prev) => (prev + 1) % screens.length);
@@ -178,95 +193,14 @@ function App() {
     document.documentElement.setAttribute('data-theme', systemPref);
   }, []);
 
-  const isValidEmail = (email) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  };
-
-
-  // --- SUPABASE SUBMISSION LOGIC ---
-  const submitEmail = async (emailAddress, source, setStatusFn, setInputFn, showToast) => {
-    if (!emailAddress || !emailAddress.includes('@')) {
-    showToast("Please enter a valid email.", "error");
-    return;
-    }
-
-    setStatusFn("loading");
-
-    try {
-    const { error } = await supabase
-    .from("waitlist")
-    .insert([{
-    email: emailAddress,
-    source: source,
-    created_at: new Date().toISOString() // ensure created_at is not null
-    }]);
-
-  
-    if (error) {
-      // Duplicate email
-      if (error.code === "23505") {
-        showToast("You're already on the list! 🚀", "success");
-        setStatusFn("success");
-      } else {
-        throw error;
-      }
-    } else {
-      showToast("You’ve been added to the waitlist! ✅", "success");
-      setStatusFn("success");
-      setInputFn("");
-    }
-
-    if (error?.code === '23505' || error?.status === 409) {
-      showToast("You're already on the waitlist! 🚀", "success");
-      setStatusFn('success');
-      setInputFn('');
-    }
-  
-
-    } catch (err) {
-    console.error("Supabase Error:", err);
-    showToast("Oops! Something went wrong. Try again.", "error");
-    setStatusFn("error");
-    setTimeout(() => setStatusFn("idle"), 3000);
-    }
-
-    setTimeout(() => {
-      setStatusFn('idle'); // back to normal button
-    }, 2000);
-  };
-
-    // Example of a simple toast function
-    // const showToast = (message, type = "info") => {
-    // const toast = document.createElement("div");
-    // toast.className = `toast ${type}`;
-    // toast.textContent = message;
-    // document.body.appendChild(toast);
-    // setTimeout(() => {
-    // toast.classList.add("fade-out");
-    // toast.addEventListener("transitionend", () => toast.remove());
-    // }, 3000);
-    // };
-
-    const showToast = (message, type = "info") => {
-      const toast = document.createElement("div");
-      toast.className = `toast ${type}`;
-      toast.textContent = message;
-      document.body.appendChild(toast);
-      setTimeout(() => {
-        toast.classList.add("fade-out");
-        toast.addEventListener("transitionend", () => toast.remove());
-      }, 3000);
-    };
-
   return (
     <div className="app">
       <div className="glow-bg top-left"></div>
       <div className="glow-bg bottom-right"></div>
 
-      {/* --- MENU OVERLAY (TAP TO CLOSE) --- */}
       <AnimatePresence>
         {isMenuOpen && (
-          <motion.div 
+          <motion.div
             className="menu-overlay"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -278,21 +212,25 @@ function App() {
 
       {/* --- NAVBAR --- */}
       <nav className="navbar">
-        {/* 1. Logo Only (No Text) */}
         <div className="brand">
           <img src={logoSrc} alt="Mora Logo" className="logo-img" />
         </div>
 
-        {/* 2. Navigation Links (Hidden on Mobile) */}
         <div className={`nav-links ${isMenuOpen ? 'open' : ''}`}>
           <a href="#features" onClick={() => setIsMenuOpen(false)}>Features</a>
           <a href="#vision" onClick={() => setIsMenuOpen(false)}>Vision</a>
           <a href="#roadmap" onClick={() => setIsMenuOpen(false)}>Roadmap</a>
-          {/* Theme Toggle Removed from here for Mobile consistency */}
-          <a href="#waitlist" className="nav-cta" onClick={() => setIsMenuOpen(false)}>Join Waitlist</a>
+          <a
+            href={PLAYSTORE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="nav-cta"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Download App
+          </a>
         </div>
 
-        {/* 3. Right Side Actions (Always Visible) */}
         <div className="nav-actions">
           <button className="theme-toggle" onClick={toggleTheme}>
             {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
@@ -307,74 +245,46 @@ function App() {
       {/* --- HERO --- */}
       <header className="hero">
         <div className="hero-content">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <div className="badge-pill"><span className="dot"></span> Beta Access Opening Soon</div>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="badge-pill">
+              <span className="dot"></span> Now Available on Android
+            </div>
+
             <h1>Master your <span className="text-gradient">Flow State.</span></h1>
+
             <p className="hero-sub">
-              Mora isn't just a a productivity app. It's an intelligent workspace that combines AI scheduling, urgent task management, and stress relief into one seamless iOS and Android experience.
+              Mora is your intelligent productivity workspace — built to help you plan smarter,
+              focus deeper, manage tasks, and reset when stress kicks in.
+              Now live on Android.
             </p>
-            
-            {/* HERO WAITLIST FORM */}
-            <form 
-              className="waitlist-form" 
-              id="waitlist" 
-              onSubmit={(e) => {
-                e.preventDefault();
 
-                if (!isValidEmail(newsletterEmail)) {
-                  showToast("Please enter a valid email ✨", "error");
-                  return;
-                }
-
-                submitEmail(
-                  newsletterEmail,
-                  "newsletter",
-                  setNewsletterStatus,
-                  setNewsletterEmail,
-                  showToast
-                );
-              }}
-            >
-              <div className="input-group">
-                <Mail className="input-icon" size={20} />
-                <input type="email" placeholder="name@email.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
-              </div>
-              <button
-                className="join-btn"
-                disabled={formStatus === 'loading'}
+            {/* OFFICIAL PLAYSTORE BADGE */}
+            <div className="download-cta-wrap" id="download">
+              <a
+                href={PLAYSTORE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="store-badge-link"
               >
-                <span className="btn-content">
-                  {formStatus === "loading"
-                    ? "Joining..."
-                    : formStatus === "success"
-                    ? "Joined!"
-                    : "Join"}
+                <img
+                  src={playBadge}
+                  alt="Get it on Google Play"
+                  className="store-badge"
+                />
+              </a>
+            </div>
 
-                  {/* Arrow only shows when idle */}
-                  {formStatus === "idle" && (
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      className="btn-arrow"
-                    >
-                      <path
-                        d="M5 12h14m0 0l-6-6m6 6l-6 6"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  )}
-                </span>
-              </button>
-            </form>
-            
             <div className="users-preview">
-              <div className="avatars"><div className="avatar">A</div><div className="avatar">B</div><div className="avatar">C</div></div>
-              <p>Join 2,000+ others waiting</p>
+              <div className="avatars">
+                {/* <div className="avatar">A</div>
+                <div className="avatar">B</div>
+                <div className="avatar">C</div> */}
+              </div>
+              {/* <p>Helping users focus better every day</p> */}
             </div>
           </motion.div>
         </div>
@@ -386,9 +296,9 @@ function App() {
             <div className="side-btn volume-up"></div>
             <div className="side-btn volume-down"></div>
             <div className="side-btn power"></div>
-            
+
             <div className="screen-container">
-              <AnimatePresence mode='wait'>
+              <AnimatePresence mode="wait">
                 <motion.div
                   key={activeScreen}
                   initial={{ opacity: 0, x: 20 }}
@@ -400,19 +310,19 @@ function App() {
                   {screens[activeScreen]}
                 </motion.div>
               </AnimatePresence>
-              
+
               <div className="tab-bar">
-                <div className={`tab-icon ${[1,3,5].includes(activeScreen) ? 'active' : ''}`}><Calendar size={20}/></div>
-                <div className={`tab-icon ${[0,4].includes(activeScreen) ? 'active' : ''}`}><Zap size={20}/></div>
-                <div className={`tab-icon ${[2].includes(activeScreen) ? 'active' : ''}`}><MessageSquare size={20}/></div>
+                <div className={`tab-icon ${[1, 3, 5].includes(activeScreen) ? 'active' : ''}`}><Calendar size={20} /></div>
+                <div className={`tab-icon ${[0, 4].includes(activeScreen) ? 'active' : ''}`}><Zap size={20} /></div>
+                <div className={`tab-icon ${[2].includes(activeScreen) ? 'active' : ''}`}><MessageSquare size={20} /></div>
               </div>
             </div>
           </div>
-          
+
           <div className="carousel-dots">
             {screens.map((_, idx) => (
-              <div 
-                key={idx} 
+              <div
+                key={idx}
                 className={`c-dot ${idx === activeScreen ? 'active' : ''}`}
                 onClick={() => setActiveScreen(idx)}
               />
@@ -428,19 +338,19 @@ function App() {
           <p className="lead">Productivity apps are broken. They make you feel busy, not productive.</p>
           <div className="vision-grid">
             <div className="vision-card">
-              <BrainCircuit size={32} className="v-icon"/>
+              <BrainCircuit size={32} className="v-icon" />
               <h3>Cognitive Load</h3>
               <p>Planning your day takes as much energy as doing the work. Mora's AI handles the scheduling so you can focus on execution.</p>
             </div>
             <div className="vision-card">
-              <Flame size={32} className="v-icon"/>
+              <Flame size={32} className="v-icon" />
               <h3>Burnout Defense</h3>
-              <p>Most timers push you until you break. Mora's "Calm Mode" and energy tracking ensure you rest *before* you crash.</p>
+              <p>Most timers push you until you break. Mora's Calm Mode and energy tracking ensure you rest before you crash.</p>
             </div>
             <div className="vision-card">
-              <Layout size={32} className="v-icon"/>
+              <Layout size={32} className="v-icon" />
               <h3>Context Switching</h3>
-              <p>Jumping between Calendar, Todoist, and Headspace kills flow. Mora unifies them into one "Super App."</p>
+              <p>Jumping between multiple apps kills flow. Mora unifies planning, focus, and mental reset into one experience.</p>
             </div>
           </div>
         </div>
@@ -448,44 +358,41 @@ function App() {
 
       {/* --- FEATURE DEEP DIVES --- */}
       <section id="features" className="deep-dive">
-        
-        {/* 1. Intelligent Scheduling */}
         <div className="feature-row">
           <div className="feature-text">
-            <div className="icon-box"><BrainCircuit size={24}/></div>
+            <div className="icon-box"><BrainCircuit size={24} /></div>
             <h3>Intelligent Scheduling</h3>
             <p>Stop guessing what to do next. Mora's AI analyzes your task list, urgent deadlines, and current energy levels.</p>
             <ul className="feature-list">
-              <li><CheckCircle size={16}/> Auto-prioritizes Urgent vs Important</li>
-              <li><CheckCircle size={16}/> Adapts to "Low Energy" states</li>
-              <li><CheckCircle size={16}/> Suggests breaks automatically</li>
+              <li><CheckCircle size={16} /> Auto-prioritizes Urgent vs Important</li>
+              <li><CheckCircle size={16} /> Adapts to low-energy moments</li>
+              <li><CheckCircle size={16} /> Suggests breaks automatically</li>
             </ul>
           </div>
           <div className="feature-visual ai-visual">
             <div className="chat-interface-mock">
-               <div className="chat-msg user">Plan my day, I'm tired.</div>
-               <div className="chat-msg ai">
-                 <div className="ai-head">✨ Suggestion</div>
-                 <div className="ai-body">
-                   <div className="plan-item">1. Clear Email (15m)</div>
-                   <div className="plan-item">2. Coffee Break ☕</div>
-                   <div className="plan-item">3. Review Designs (30m)</div>
-                 </div>
-               </div>
+              <div className="chat-msg user">Plan my day, I'm tired.</div>
+              <div className="chat-msg ai">
+                <div className="ai-head">✨ Suggestion</div>
+                <div className="ai-body">
+                  <div className="plan-item">1. Clear Email (15m)</div>
+                  <div className="plan-item">2. Coffee Break ☕</div>
+                  <div className="plan-item">3. Review Designs (30m)</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* 2. Calm Mode */}
         <div className="feature-row reverse">
           <div className="feature-text">
-            <div className="icon-box"><Wind size={24}/></div>
+            <div className="icon-box"><Wind size={24} /></div>
             <h3>Calm Mode</h3>
             <p>Anxiety is the enemy of focus. When you feel stuck, switch to Calm Mode for immediate relief.</p>
             <ul className="feature-list">
-              <li><CheckCircle size={16}/> Haptic-synced breathing exercises</li>
-              <li><CheckCircle size={16}/> Visual cues to lower heart rate</li>
-              <li><CheckCircle size={16}/> Integrated directly into the timer</li>
+              <li><CheckCircle size={16} /> Haptic-synced breathing exercises</li>
+              <li><CheckCircle size={16} /> Visual cues to lower heart rate</li>
+              <li><CheckCircle size={16} /> Integrated directly into the timer</li>
             </ul>
           </div>
           <div className="feature-visual calm-visual">
@@ -493,50 +400,48 @@ function App() {
           </div>
         </div>
 
-        {/* 3. Journaling */}
         <div className="feature-row">
           <div className="feature-text">
-            <div className="icon-box"><PenTool size={24}/></div>
+            <div className="icon-box"><PenTool size={24} /></div>
             <h3>Brain Dump Journaling</h3>
             <p>Clear your mental RAM before a session. Write down distracting thoughts, and let the AI summarize them into actionable tasks later.</p>
             <ul className="feature-list">
-              <li><CheckCircle size={16}/> Minimalist writing interface</li>
-              <li><CheckCircle size={16}/> Auto-convert thoughts to tasks</li>
-              <li><CheckCircle size={16}/> Encrypted and private</li>
+              <li><CheckCircle size={16} /> Minimalist writing interface</li>
+              <li><CheckCircle size={16} /> Auto-convert thoughts to tasks</li>
+              <li><CheckCircle size={16} /> Encrypted and private</li>
             </ul>
           </div>
           <div className="feature-visual journal-visual">
             <div className="journal-card">
               <div className="j-header">Morning Dump</div>
               <div className="j-lines">
-                <span className="j-line" style={{width: '90%'}}></span>
-                <span className="j-line" style={{width: '95%'}}></span>
-                <span className="j-line" style={{width: '60%'}}></span>
+                <span className="j-line" style={{ width: '90%' }}></span>
+                <span className="j-line" style={{ width: '95%' }}></span>
+                <span className="j-line" style={{ width: '60%' }}></span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* 4. Analytics */}
         <div className="feature-row reverse" id="analytics">
           <div className="feature-text">
-            <div className="icon-box"><BarChart3 size={24}/></div>
+            <div className="icon-box"><BarChart3 size={24} /></div>
             <h3>Data-Driven Growth</h3>
-            <p>You can't improve what you don't measure. Get a comprehensive "Productivity Score" based on your habits.</p>
+            <p>You can't improve what you don't measure. Get a comprehensive productivity score based on your habits.</p>
             <ul className="feature-list">
-              <li><CheckCircle size={16}/> Weekly Focus Trends</li>
-              <li><CheckCircle size={16}/> Heatmap of peak performance hours</li>
-              <li><CheckCircle size={16}/> CSV Export for your own records</li>
+              <li><CheckCircle size={16} /> Weekly Focus Trends</li>
+              <li><CheckCircle size={16} /> Peak performance insights</li>
+              <li><CheckCircle size={16} /> Exportable progress data</li>
             </ul>
           </div>
           <div className="feature-visual analytics-visual">
-             <div className="graph-container">
-               <div className="graph-bar h40"></div>
-               <div className="graph-bar h70"></div>
-               <div className="graph-bar h50"></div>
-               <div className="graph-bar h80 active"></div>
-               <div className="graph-bar h60"></div>
-             </div>
+            <div className="graph-container">
+              <div className="graph-bar h40"></div>
+              <div className="graph-bar h70"></div>
+              <div className="graph-bar h50"></div>
+              <div className="graph-bar h80 active"></div>
+              <div className="graph-bar h60"></div>
+            </div>
           </div>
         </div>
       </section>
@@ -549,34 +454,34 @@ function App() {
         </div>
         <div className="bento-grid">
           <div className="bento-card">
-            <Smartphone size={28} className="b-icon"/>
+            <Smartphone size={28} className="b-icon" />
             <h4>Home Widgets</h4>
-            <p>View urgent tasks and timer status directly from your iOS/Android home screen.</p>
+            <p>View urgent tasks and timer status directly from your Android home screen.</p>
           </div>
           <div className="bento-card">
-            <Calendar size={28} className="b-icon"/>
+            <Calendar size={28} className="b-icon" />
             <h4>2-Way Sync</h4>
-            <p>Import Google Calendar meetings and export your "Deep Work" blocks instantly.</p>
+            <p>Import Google Calendar meetings and export your deep work blocks instantly.</p>
           </div>
           <div className="bento-card">
-            <Music size={28} className="b-icon"/>
+            <Music size={28} className="b-icon" />
             <h4>Ambient Soundscapes</h4>
-            <p>Lo-fi, White Noise, and Nature sounds built-in to help you zone out distractions.</p>
+            <p>Lo-fi, white noise, and nature sounds built-in to help you zone out distractions.</p>
           </div>
           <div className="bento-card">
-            <Shield size={28} className="b-icon"/>
+            <Shield size={28} className="b-icon" />
             <h4>Private by Default</h4>
-            <p>Your journal entries and chat history are encrypted and local-first.</p>
+            <p>Your journal entries and chat history are encrypted and privacy-first.</p>
           </div>
           <div className="bento-card">
-            <Flame size={28} className="b-icon"/>
+            <Flame size={28} className="b-icon" />
             <h4>Gamification</h4>
-            <p>Earn "Zen Master" badges and streaks to keep your dopamine working for you.</p>
+            <p>Earn streaks and milestones to keep momentum going.</p>
           </div>
           <div className="bento-card">
-            <Bell size={28} className="b-icon"/>
+            <Bell size={28} className="b-icon" />
             <h4>Smart Alerts</h4>
-            <p>Notifications that know when to nudge you and when to leave you alone.</p>
+            <p>Notifications that know when to nudge you and when to stay quiet.</p>
           </div>
         </div>
       </section>
@@ -590,12 +495,12 @@ function App() {
           </div>
           <div className="roadmap-grid">
             <div className="roadmap-item">
-              <Users size={24} className="r-icon"/>
+              <Users size={24} className="r-icon" />
               <h4>Focus Buddies</h4>
               <p>Live focus rooms to work alongside friends.</p>
             </div>
             <div className="roadmap-item">
-              <Layers size={24} className="r-icon"/>
+              <Layers size={24} className="r-icon" />
               <h4>Project Stacks</h4>
               <p>Group tasks into sophisticated project hierarchies.</p>
             </div>
@@ -604,124 +509,80 @@ function App() {
       </section>
 
       {/* --- FOOTER --- */}
-      <footer>
+      <footer className="site-footer">
+        <div className="footer-glow footer-glow-1"></div>
+        <div className="footer-glow footer-glow-2"></div>
+
         <div className="footer-top">
-          
           {/* Brand Column */}
           <div className="footer-brand-col">
-            <div className="brand">
-              {/* <img src={logoSrc} alt="Mora" className="logo-img" style={{height: '40px'}}/> */}
-              <span style={{fontWeight:800, fontSize:'1.5rem', marginLeft:'10px'}}>Mora.</span>
+            <div className="footer-brand">
+              <img src={logoSrc} alt="Mora Logo" className="footer-logo" />
+              {/* <span className="footer-brand-name">Mora</span> */}
             </div>
+
             <p className="footer-desc">
               The operating system built for your mind.
             </p>
+
             <div className="footer-socials">
-              <a href="#" aria-label="Twitter"><Twitter size={20}/></a>
-              <a href="#" aria-label="Instagram"><Instagram size={20}/></a>
-              <a href="#" aria-label="TikTok"><Tiktok size={20}/></a>
-              <a href="#" aria-label="LinkedIn"><Linkedin size={20}/></a>
-              <a href="#" aria-label="GitHub"><Github size={20}/></a>
+              <a href="#" aria-label="Twitter"><Twitter size={20} /></a>
+              <a href="#" aria-label="Instagram"><Instagram size={20} /></a>
+              <a href="#" aria-label="TikTok"><Tiktok size={20} /></a>
+              <a href="#" aria-label="LinkedIn"><Linkedin size={20} /></a>
+              <a href="#" aria-label="GitHub"><Github size={20} /></a>
             </div>
           </div>
 
-          {/* Links Grid */}
-          <div className="footer-links-grid">
+          {/* Product Links */}
+          <div className="footer-links-grid single-column">
             <div className="f-col">
               <h4>Product</h4>
               <a href="#features">Features</a>
+              <a href="#vision">Why Mora</a>
               <a href="#roadmap">Roadmap</a>
-              <a href="#download">Download</a>
-              <a href="#">Changelog</a>
-            </div>
-            <div className="f-col">
-              <h4>Company</h4>
-              <a href="#vision">Vision</a>
-              <a href="#">About</a>
-              <a href="#">Careers</a>
-              <a href="mailto:hello@mora.app">Contact</a>
-            </div>
-            <div className="f-col">
-              <h4>Legal</h4>
-              <a href="#">Privacy Policy</a>
-              <a href="#">Terms of Service</a>
-              <a href="#">Cookie Policy</a>
+              <a href={PLAYSTORE_URL} target="_blank" rel="noopener noreferrer">Download</a>
             </div>
           </div>
 
-          {/* Newsletter / Status */}
-          <div className="footer-newsletter-col">
-            <h4>Stay Updated</h4>
-            <p>Get the latest features and productivity tips.</p>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
+          {/* Download Column */}
+          <div className="footer-download-col">
+            <div className="download-card">
+              <div className="download-badge-row">
+                <span className="live-dot"></span>
+                <span className="download-status">Now available on Android</span>
+              </div>
 
-                if (!isValidEmail(heroEmail)) {
-                  showToast("Please enter a valid email ✨", "error");
-                  return;
-                }
+              <h4>Download Mora</h4>
+              <p>
+                Start focusing smarter, planning better, and staying consistent with Mora.
+              </p>
 
-                submitEmail(
-                  newsletterEmail,
-                  "newsletter",
-                  setNewsletterStatus,
-                  setNewsletterEmail,
-                  showToast
-                );
-              }}
-              className="newsletter-form"
-            >
-              <input
-                type="email"
-                placeholder="Enter your email"
-                value={newsletterEmail}
-                onChange={(e) => setNewsletterEmail(e.target.value)}
-                required
-                className="newsletter-input"
-              />
-
-              <button
-                className="newsletter-btn"
-                disabled={newsletterStatus === "loading"}
+              <a
+                href={PLAYSTORE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="store-badge-link footer-badge-link"
               >
-                {newsletterStatus === "loading"
-                  ? "Joining…"
-                  : newsletterStatus === "success"
-                  ? "Joined!"
-                  : "Join"}
+                <img
+                  src={playBadge}
+                  alt="Get it on Google Play"
+                  className="store-badge footer-store-badge"
+                />
+              </a>
 
-                {newsletterStatus === "idle" && (
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    className="btn-arrow"
-                  >
-                    <path
-                      d="M5 12h14m0 0l-6-6m6 6l-6 6"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                )}
-              </button>
-            </form>
-            <div className="system-status">
-              <span className="status-dot"></span>
-              <span>All Systems Operational</span>
+              <div className="footer-mini-note">
+                Free to download
+              </div>
             </div>
           </div>
         </div>
 
         <div className="footer-bottom">
-          <p>© 2025 Mora App Inc. All rights reserved.</p>
+          <p>© 2026 Mora App. All rights reserved.</p>
           <div className="footer-bottom-links">
-            <a href="#">Sitemap</a>
-            <a href="#">Cookies</a>
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
           </div>
         </div>
       </footer>
