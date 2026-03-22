@@ -1,0 +1,138 @@
+.policy-page {
+  position: relative;
+  min-height: 100vh;
+  padding: 80px 20px;
+  color: #f8fafc;
+}
+
+.policy-shell {
+  max-width: 900px;
+  margin: 0 auto;
+  z-index: 1;
+  position: relative;
+}
+
+.policy-hero {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.policy-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 20px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(59,130,246,0.15);
+}
+
+.policy-subtext {
+  opacity: 0.7;
+  margin-top: 10px;
+}
+
+.policy-meta {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  opacity: 0.5;
+}
+
+.policy-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.policy-card {
+  padding: 24px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(10px);
+}
+
+.policy-card.highlight {
+  border-color: rgba(59,130,246,0.4);
+}
+
+.policy-card-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.policy-card h2 {
+  font-size: 1.2rem;
+}
+
+.policy-card h4 {
+  margin-top: 16px;
+  font-size: 0.95rem;
+  opacity: 0.8;
+}
+
+.policy-card ul {
+  margin-top: 8px;
+  padding-left: 18px;
+  opacity: 0.8;
+}
+
+.policy-card li {
+  margin-bottom: 6px;
+}
+
+.policy-actions {
+  margin-top: 16px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.policy-btn {
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  padding: 10px 16px;
+  border-radius: 12px;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.policy-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  opacity: 0.8;
+  text-decoration: none;
+  color: #cbd5f5;
+}
+
+.policy-note {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  opacity: 0.6;
+}
+
+.policy-bg-glow {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  filter: blur(120px);
+  opacity: 0.4;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.glow-1 {
+  top: -100px;
+  left: -100px;
+  background: radial-gradient(circle, #3b82f6, transparent 60%);
+}
+
+.glow-2 {
+  bottom: -100px;
+  left: 0;
+  background: radial-gradient(circle, #7c3aed, transparent 60%);
+}
