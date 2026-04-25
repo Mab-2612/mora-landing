@@ -525,13 +525,13 @@ function App() {
               The operating system built for your mind.
             </p>
 
-            <div className="footer-socials">
+            {/* <div className="footer-socials">
               <a href="#" aria-label="Twitter"><Twitter size={20} /></a>
               <a href="#" aria-label="Instagram"><Instagram size={20} /></a>
               <a href="#" aria-label="TikTok"><Tiktok size={20} /></a>
               <a href="#" aria-label="LinkedIn"><Linkedin size={20} /></a>
               <a href="#" aria-label="GitHub"><Github size={20} /></a>
-            </div>
+            </div> */}
           </div>
 
           {/* Product Links */}
@@ -541,6 +541,7 @@ function App() {
               <a href="#features">Features</a>
               <a href="#vision">Why Mora</a>
               <a href="#roadmap">Roadmap</a>
+              {/* <a href="/privacy-policy">Privacy Policy</a> */}
               <a href={PLAYSTORE_URL} target="_blank" rel="noopener noreferrer">Download</a>
             </div>
           </div>
@@ -581,8 +582,8 @@ function App() {
         <div className="footer-bottom">
           <p>© 2026 Mora App. All rights reserved.</p>
           <div className="footer-bottom-links">
-            <a href="#">Privacy</a>
-            <a href="#">Terms</a>
+            <a href="/privacy-policy">Privacy Policy</a>
+            {/* <a href="#">Terms</a> */}
           </div>
         </div>
       </footer>

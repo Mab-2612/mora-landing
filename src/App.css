@@ -395,14 +395,19 @@ footer {
 
 /* Bottom Bar */
 .footer-bottom {
-  border-top: 1px solid var(--glass-border);
-  padding-top: 30px;
+  position: relative;
+  z-index: 1;
+  margin-top: 30px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1280px;
-  margin: 0 auto;
-  font-size: 0.85rem;
+  flex-direction: column;   /* stack text + links */
+  align-items: center;      /* center horizontally */
+  justify-content: center;  /* center vertically */
+  gap: 10px;                /* space between text + link */
+
+  text-align: center;
 }
 .footer-bottom-links { display: flex; gap: 24px; }
 .footer-bottom-links a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
@@ -734,8 +739,11 @@ footer {
 
 @media (max-width: 640px) {
   .download-cta-wrap {
-    flex-direction: column;
-    align-items: stretch;
+    justify-content: center;
+  }
+
+  .store-badge {
+    max-width: 200px; /* slightly smaller for phones */
   }
 
   .playstore-cta,
@@ -752,8 +760,9 @@ footer {
 }
 
 .store-badge {
-  height: 80px;
-  width: 280px;
+  height: auto;
+  width: 100%;
+  max-width: 240px; /* controls size */
   display: block;
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
@@ -772,6 +781,8 @@ footer {
 @media (max-width: 640px) {
   .store-badge {
     height: 56px;
+    justify-content: center;
+    align-items: center;
   }
 }
 
@@ -906,6 +917,9 @@ footer {
   color: inherit;
   opacity: 0.72;
   transition: opacity 0.2s ease, transform 0.2s ease;
+  justify-content: flex-start;
+  text-align: center;
+  align-items: center;
 }
 
 .f-col a:hover,
@@ -989,7 +1003,7 @@ footer {
   opacity: 0.6;
 }
 
-.footer-bottom {
+/* .footer-bottom {
   position: relative;
   z-index: 1;
   margin-top: 30px;
@@ -1000,7 +1014,7 @@ footer {
   justify-content: space-between;
   gap: 14px;
   flex-wrap: wrap;
-}
+} */
 
 .footer-bottom p {
   opacity: 0.62;
@@ -1039,6 +1053,6 @@ footer {
 
   .footer-bottom {
     flex-direction: column;
-    align-items: flex-start;
+    /* align-items: flex-start; */
   }
 }
