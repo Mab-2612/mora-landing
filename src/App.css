@@ -912,6 +912,7 @@ footer {
 }
 
 .f-col a,
+.f-col h4,
 .footer-bottom-links a {
   text-decoration: none;
   color: inherit;
