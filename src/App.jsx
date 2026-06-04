@@ -250,9 +250,9 @@ function App() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="badge-pill">
+            {/* <div className="badge-pill">
               <span className="dot"></span> Now Available on Android
-            </div>
+            </div> */}
 
             <h1>Master your <span className="text-gradient">Flow State.</span></h1>
 
@@ -479,31 +479,9 @@ function App() {
             <p>Earn streaks and milestones to keep momentum going.</p>
           </div>
           <div className="bento-card">
-            <Bell size={28} className="b-icon" />
-            <h4>Smart Alerts</h4>
-            <p>Notifications that know when to nudge you and when to stay quiet.</p>
-          </div>
-        </div>
-      </section>
-
-      {/* --- ROADMAP SECTION --- */}
-      <section id="roadmap" className="roadmap-section">
-        <div className="roadmap-content">
-          <div className="roadmap-header">
-            <h2>Coming Soon</h2>
-            <p>We are just getting started.</p>
-          </div>
-          <div className="roadmap-grid">
-            <div className="roadmap-item">
-              <Users size={24} className="r-icon" />
+              <Users size={24} className="b-icon" />
               <h4>Focus Buddies</h4>
               <p>Live focus rooms to work alongside friends.</p>
-            </div>
-            <div className="roadmap-item">
-              <Layers size={24} className="r-icon" />
-              <h4>Project Stacks</h4>
-              <p>Group tasks into sophisticated project hierarchies.</p>
-            </div>
           </div>
         </div>
       </section>
@@ -549,10 +527,10 @@ function App() {
           {/* Download Column */}
           <div className="footer-download-col">
             <div className="download-card">
-              <div className="download-badge-row">
-                <span className="live-dot"></span>
-                <span className="download-status">Now available on Android</span>
-              </div>
+              {/* <div className="download-badge-row"> */}
+                {/* <span className="live-dot"></span> */}
+                {/* <span className="download-status">Now available on Android</span> */}
+              {/* </div> */}
 
               <h4>Download Mora</h4>
               <p>
@@ -583,7 +561,7 @@ function App() {
           <p>© 2026 Mora App. All rights reserved.</p>
           <div className="footer-bottom-links">
             <a href="/privacy-policy">Privacy Policy</a>
-            {/* <a href="#">Terms</a> */}
+            <a href="/terms-of-service">Terms of Service</a>
           </div>
         </div>
       </footer>
